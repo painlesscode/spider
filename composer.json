@@ -1,0 +1,26 @@
+{
+    "name": "painlesscode/spider",
+    "type": "library",
+    "description": "Resource manager for laravel",
+    "autoload": {
+        "psr-4": {
+            "Painlesscode\\Spider\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hazzaz Bin Faiz",
+            "email": "hazzazbinfaiz@gmail.com"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^8.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Painlesscode\\Spider\\SpiderServiceProvider"
+            ]
+        }
+    }
+}
