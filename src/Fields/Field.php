@@ -1,0 +1,167 @@
+<?php
+
+namespace Painlesscode\Spider\Fields;
+
+
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+
+class Field
+{
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $column;
+
+    /**
+     * @var mixed
+     */
+    public $value;
+
+    /**
+     * @var array
+     */
+    public $attributes = [];
+
+    /**
+     * @var array
+     */
+    public $rules = [];
+
+    /**
+     * @var array
+     */
+    public $rulesForStore = [];
+
+    /**
+     * @var array
+     */
+    public $rulesForUpdate = [];
+
+    public $visibleOn = [
+        'index', 'create', 'show', 'edit'
+    ];
+
+    public function __construct($name, $column = null)
+    {
+        $this->name = $name;
+        $this->column = $column ?? Str::snake($name);
+    }
+
+    public static function make($name, $column = null)
+    {
+        return new static($name, $column);
+    }
+
+    public function required($required = true)
+    {
+        $this->attributes['required'] = $required;
+        return $this;
+    }
+
+    /**
+     * @param  callable|array|string  $rules
+     * @return $this
+     */
+    public function rules($rules)
+    {
+        $this->rules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
+        return $this;
+    }
+
+    /**
+     * @param  callable|array|string  $rules
+     * @return $this
+     */
+    public function rulesForStore($rules)
+    {
+        $this->rulesForStore = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
+        return $this;
+    }
+
+    /**
+     * @param  callable|array|string  $rules
+     * @return $this
+     */
+    public function rulesForUpdate($rules)
+    {
+        $this->rulesForUpdate = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRulesForStore()
+    {
+        return array_merge($this->rules, $this->rulesForStore);
+    }
+
+    /**
+     * @return array
+     */
+    public function getRulesForUpdate()
+    {
+        return array_merge($this->rules, $this->rulesForUpdate);
+    }
+
+    /**
+     * @param array $only
+     * @return $this
+     */
+    public function only($only = [])
+    {
+        $this->visibleOn = $only;
+        return $this;
+    }
+
+    /**
+     * @param array $except
+     * @return $this
+     */
+    public function except($except = [])
+    {
+        $this->visibleOn = array_diff($this->visibleOn, $except);
+        return $this;
+    }
+
+    /**
+     * @param $context
+     * @return bool
+     */
+    public function isVisible($context)
+    {
+        return in_array($context, $this->visibleOn);
+    }
+
+    /**
+     * @param  string $context
+     * @return bool
+     */
+    public function isRequired($context)
+    {
+        if (isset($this->attributes['required']) && (
+            is_callable($this->attributes['required'])
+                ? call_user_func($this->attributes['required'], $context)
+                : $this->attributes['required'])
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $this->attributes['required'] = $this->isRequired();
+        return $this->attributes;
+    }
+}
