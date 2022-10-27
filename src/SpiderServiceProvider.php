@@ -22,6 +22,8 @@ class SpiderServiceProvider extends ServiceProvider
             __DIR__.'/../public' => public_path('vendor/spider'),
         ], 'public');
 
-        $this->app->make(TagInjector::class)->pushStyle(mix('css/output.css', 'vendor/spider'));
+        $this->app->make(TagInjector::class)->pushStyle(function (){
+            return mix('css/output.css', 'vendor/spider');
+        });
     }
 }
