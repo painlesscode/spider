@@ -15,7 +15,8 @@
     ],
     "require": {
         "laravel/framework": "^8.0",
-        "painlesscode/module-connector": "dev-main"
+        "painlesscode/module-connector": "dev-main",
+        "painlesscode/reporter": "dev-main"
     },
     "extra": {
         "laravel": {

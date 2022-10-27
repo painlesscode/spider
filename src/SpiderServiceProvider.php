@@ -6,7 +6,6 @@ namespace Painlesscode\Spider;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\ServiceProvider;
 use Painlesscode\ModuleConnector\TagInjector;
-use Painlesscode\Spider\Mixin\ResponseMixin;
 
 class SpiderServiceProvider extends ServiceProvider
 {
@@ -24,7 +23,5 @@ class SpiderServiceProvider extends ServiceProvider
         ], 'public');
 
         $this->app->make(TagInjector::class)->pushStyle(mix('css/output.css', 'vendor/spider'));
-
-        ResponseFactory::mixin(new ResponseMixin());
     }
 }
