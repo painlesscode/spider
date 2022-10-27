@@ -6,12 +6,9 @@
                class="py-1 px-3 text-sm bg-gray-700 text-white rounded mr-4">{{ __('Create '.$name) }}</a>
         @endif
     </div>
-    <div class="w-full p-4 bg-slate-100">
+    <div class="w-full p-4">
         <div class="w-full flex flex-col">
-            <div class="w-full flex justify-between">
-
-            </div>
-            <div class="w-full rounded-t bg-gray-50 h-12 flex justify-between items-center p-2" x-data>
+            <div class="w-full rounded-t bg-gray-50 flex justify-between items-center p-2" x-data>
                 <form action="">
                     <select class="border rounded p-1" name="per_page"
                             x-on:change="$event.target.parentElement.submit()">

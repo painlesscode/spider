@@ -6,7 +6,7 @@
                class="py-1 px-3 text-sm bg-gray-700 text-white rounded mr-4">{{ __($name.' List') }}</a>
         @endif
     </div>
-    <div class="w-full p-4 bg-slate-100">
+    <div class="w-full p-4">
         <div class="w-full flex flex-wrap justify-center">
             @foreach($fields as $field)
                 <div class="w-full flex border border-slate-400">

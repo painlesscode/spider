@@ -6,7 +6,7 @@
                class="py-1 px-3 text-sm bg-gray-700 text-white rounded mr-4">{{ __(Str::plural($name)) }}</a>
         @endif
     </div>
-    <div class="w-full p-4 bg-slate-100">
+    <div class="w-full p-4">
         <form action="{{ route($routeName.'.update', $model->getKey()) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
