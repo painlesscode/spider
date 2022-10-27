@@ -1,0 +1,2 @@
+# Spider
+Spider resource manager
