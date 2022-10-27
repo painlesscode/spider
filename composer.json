@@ -24,5 +24,15 @@
                 "Painlesscode\\Spider\\SpiderServiceProvider"
             ]
         }
+    },
+    "repositories": {
+        "reporter": {
+            "type": "vcs",
+            "url": "https://github.com/painlesscode/reporter.git"
+        },
+        "module-connector": {
+            "type": "vcs",
+            "url": "https://github.com/painlesscode/module-connector.git"
+        }
     }
 }
