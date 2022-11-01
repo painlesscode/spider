@@ -43,6 +43,11 @@ class Field
      */
     public $rulesForUpdate = [];
 
+
+    public $indexValueResolver;
+
+    public $showValueResolver;
+
     public $visibleOn = [
         'index', 'create', 'show', 'edit'
     ];
@@ -53,9 +58,9 @@ class Field
         $this->column = $column ?? Str::snake($name);
     }
 
-    public static function make($name, $column = null)
+    public static function make()
     {
-        return new static($name, $column);
+        return new static(...func_get_args());
     }
 
     public function required($required = true)
@@ -159,9 +164,21 @@ class Field
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes($context)
     {
-        $this->attributes['required'] = $this->isRequired();
+        $this->attributes['required'] = $this->isRequired($context);
         return $this->attributes;
+    }
+
+    public function indexValueResolver(\Closure $callable)
+    {
+        $this->indexValueResolver = $callable;
+        return $this;
+    }
+
+    public function showValueResolver(\Closure $callable)
+    {
+        $this->showValueResolver = $callable;
+        return $this;
     }
 }

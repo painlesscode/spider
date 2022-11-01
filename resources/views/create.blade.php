@@ -11,7 +11,19 @@
             @csrf
             <div class="w-full flex flex-wrap justify-center">
                 @foreach($fields as $field)
-                    <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')"/>
+                    @if($field instanceof \Painlesscode\Spider\Fields\Select)
+                        <x-spider::labeled-select class="p-1 w-full lg:w-1/2 xl:w-1/3" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')">
+                            @foreach($field->getOptions() as $key => $option)
+                                @if($option instanceof \Painlesscode\Spider\Fields\Utils\Option)
+                                    <option value="{{ $option->value }}">{{ $option->label }}</option>
+                                @else
+                                <option value="{{ $key }}">{{ $option }}</option>
+                                @endif
+                            @endforeach
+                        </x-spider::labeled-select>
+                    @else
+                        <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')"/>
+                    @endif
                 @endforeach
             </div>
             <div class="w-full p-4 flex justify-center">

@@ -38,7 +38,7 @@
                 @foreach($items as $item)
                     <tr class="border-y bg-white">
                         @foreach($fields as $field)
-                            <td class="p-2">{{ $item->{$field->column} }}</td>
+                            <td class="p-2">{!! $field->indexValueResolver ? ($field->indexValueResolver)($item) : $item->{$field->column} !!}</td>
                         @endforeach
                         <td class="p-2">
                             <div class="flex justify-end text-gray-500">
