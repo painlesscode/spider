@@ -41,11 +41,11 @@ class Resource
      */
     public $afterUpdateValidationCallback;
 
-    public function __construct($name, $model)
+    public function __construct($name, $model, $routeName = null)
     {
         $this->name = $name;
         $this->model = $model;
-        $this->routeName = strtolower($name);
+        $this->routeName = $routeName ?? strtolower($name);
     }
 
     /**
