@@ -2,8 +2,10 @@
 
 namespace Painlesscode\Spider\Resource;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Painlesscode\Reporter\Facades\Reporter;
 use Painlesscode\Spider\Fields\Field;
 use Painlesscode\Spider\Views\Create;
 use Painlesscode\Spider\Views\Edit;
@@ -105,6 +107,15 @@ trait HasResource
     {
         $model = $this->resource->model::findOrFail($modelKey);
 
-        return response()->report($model->delete(), Str::title($this->resource->name).' Deleted Successfully');
+        $deleted = false;
+        try {
+            $deleted = $model->delete();
+        } catch (QueryException $ex) {
+            if (str_contains($ex->getMessage(), 'Integrity constraint violation')) {
+                Reporter::error('Entity already is being used somewhere else');
+            }
+        }
+
+        return response()->report($deleted, Str::title($this->resource->name).' Deleted Successfully');
     }
 }
