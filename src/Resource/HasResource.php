@@ -22,6 +22,7 @@ trait HasResource
                 return $field->isVisible('index');
             }))
             ->useLayout($this->resource->layout)
+            ->routeName($this->resource->routeName)
             ->render();
     }
 
@@ -33,6 +34,7 @@ trait HasResource
                 return $field->isVisible('create');
             }))
             ->useLayout($this->resource->layout)
+            ->routeName($this->resource->routeName)
             ->render();
     }
 
@@ -62,6 +64,7 @@ trait HasResource
                 return $field->isVisible('show');
             }))
             ->useLayout($this->resource->layout)
+            ->routeName($this->resource->routeName)
             ->render();
     }
 
@@ -75,6 +78,7 @@ trait HasResource
                 return $field->isVisible('edit');
             }))
             ->useLayout($this->resource->layout)
+            ->routeName($this->resource->routeName)
             ->render();
     }
 
