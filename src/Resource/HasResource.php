@@ -19,7 +19,9 @@ trait HasResource
 {
     public function index()
     {
-        return (new Index($this->resource->name, $this->resource->model::query()))
+        return (new Index($this->resource->name, $this->resource->model::query()->when(
+            $this->resource->indexQueryModifier, $this->resource->indexQueryModifier
+        )))
             ->fields(array_filter($this->resource->fields, function (Field $field) {
                 return $field->isVisible('index');
             }))

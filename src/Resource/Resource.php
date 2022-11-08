@@ -41,6 +41,11 @@ class Resource
      */
     public $afterUpdateValidationCallback;
 
+    /**
+     * @var callable
+     */
+    public $indexQueryModifier;
+
     public function __construct($name, $model, $routeName = null)
     {
         $this->name = $name;
@@ -78,6 +83,12 @@ class Resource
     public function afterUpdateValidation(callable $callback)
     {
         $this->afterUpdateValidationCallback = $callback;
+        return $this;
+    }
+
+    public function indexQueryModifier(callable $callback)
+    {
+        $this->indexQueryModifier = $callback;
         return $this;
     }
 }
