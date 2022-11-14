@@ -10,7 +10,7 @@
         <div class="w-full flex flex-col">
             <div class="w-full rounded-t bg-gray-50 flex justify-between items-center p-2" x-data>
                 <form action="">
-                    <select class="border rounded p-1" name="per_page"
+                    <select class="border rounded p-1 pr-8" name="per_page"
                             x-on:change="$event.target.parentElement.submit()">
                         <option value="10" @if(request('per_page') == 10) selected @endif>{{ __('10') }}</option>
                         <option value="20" @if(request('per_page') == 20) selected @endif>{{ __('20') }}</option>
