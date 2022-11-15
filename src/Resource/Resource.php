@@ -44,6 +44,21 @@ class Resource
     /**
      * @var callable
      */
+    public $afterStoreCallback;
+
+    /**
+     * @var callable
+     */
+    public $afterUpdateCallback;
+
+    /**
+     * @var callable
+     */
+    public $afterDestroyCallback;
+
+    /**
+     * @var callable
+     */
     public $indexQueryModifier;
 
     public function __construct($name, $model, $routeName = null)
@@ -83,6 +98,24 @@ class Resource
     public function afterUpdateValidation(callable $callback)
     {
         $this->afterUpdateValidationCallback = $callback;
+        return $this;
+    }
+
+    public function afterStore(callable $callback)
+    {
+        $this->afterStoreCallback = $callback;
+        return $this;
+    }
+
+    public function afterUpdate(callable $callback)
+    {
+        $this->afterUpdateCallback = $callback;
+        return $this;
+    }
+
+    public function afterDestroy(callable $callback)
+    {
+        $this->afterDestroyCallback = $callback;
         return $this;
     }
 

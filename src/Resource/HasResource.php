@@ -4,6 +4,7 @@ namespace Painlesscode\Spider\Resource;
 
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Painlesscode\Reporter\Facades\Reporter;
 use Painlesscode\Spider\Fields\Field;
@@ -51,11 +52,29 @@ trait HasResource
             })->all()
         );
 
-        $validated = $this->resource->afterStoreValidationCallback
-            ? call_user_func($this->resource->afterStoreValidationCallback, $validated)
-            : $validated;
+        try {
+            DB::beginTransaction();
 
-        return response()->report($this->resource->model::create($validated), Str::title($this->resource->name).' Created Successfully');
+            $validated = $this->resource->afterStoreValidationCallback
+                ? call_user_func($this->resource->afterStoreValidationCallback, $validated)
+                : $validated;
+
+            $model = $this->resource->model::create($validated);
+
+            if($this->resource->afterStoreCallback) {
+                $this->resource->afterStoreCallback($model);
+            }
+
+            $success = (bool) $model;
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            report($exception);
+            $success = false;
+        }
+
+        return response()->report($success, Str::title($this->resource->name).' Created Successfully');
     }
 
 
@@ -97,11 +116,29 @@ trait HasResource
             })->all()
         );
 
-        $validated = $this->resource->afterUpdateValidationCallback
-            ? call_user_func($this->resource->afterUpdateValidationCallback, $validated)
-            : $validated;
+        try {
+            DB::beginTransaction();
 
-        return response()->report($model->update($validated), Str::title($this->resource->name).' Updated Successfully');
+            $validated = $this->resource->afterUpdateValidationCallback
+                ? call_user_func($this->resource->afterUpdateValidationCallback, $validated)
+                : $validated;
+
+            $updated = $model->update($validated);
+
+            if($updated && $this->resource->afterUpdateCallback) {
+                $this->resource->afterUpdateCallback($model);
+            }
+
+            $success = $updated;
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            report($exception);
+            $success = false;
+        }
+
+        return response()->report($success, Str::title($this->resource->name).' Updated Successfully');
     }
 
 
@@ -111,8 +148,14 @@ trait HasResource
 
         $deleted = false;
         try {
+            DB::beginTransaction();
             $deleted = $model->delete();
+            if ($deleted && $this->resource->afterDestroyCallback) {
+                $this->resource->afterDestroyCallback();
+            }
+            DB::commit();
         } catch (QueryException $ex) {
+            DB::rollBack();
             if (str_contains($ex->getMessage(), 'Integrity constraint violation')) {
                 Reporter::error('Entity already is being used somewhere else');
             }
