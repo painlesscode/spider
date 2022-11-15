@@ -14,4 +14,10 @@ class Select extends Field
     public function getOptions() {
         return $this->options;
     }
+
+    public function dependOn($parent)
+    {
+        $this->attributes['depend-on'] = $parent;
+        return $this;
+    }
 }

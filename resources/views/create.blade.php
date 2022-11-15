@@ -12,17 +12,17 @@
             <div class="w-full flex flex-wrap justify-center">
                 @foreach($fields as $field)
                     @if($field instanceof \Painlesscode\Spider\Fields\Select)
-                        <x-spider::labeled-select class="p-1 w-full lg:w-1/2 xl:w-1/3" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')">
+                        <x-spider::labeled-select class="p-1 w-full lg:w-1/2 xl:w-1/3" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')" :extra-attributes="$field->getAttributes('create')">
                             @foreach($field->getOptions() as $key => $option)
                                 @if($option instanceof \Painlesscode\Spider\Fields\Utils\Option)
-                                    <option value="{{ $option->value }}">{{ $option->label }}</option>
+                                    <option value="{{ $option->value }}" @if($option->parent) data-parent="{{ $option->parent }}" @endif>{{ $option->label }}</option>
                                 @else
                                 <option value="{{ $key }}">{{ $option }}</option>
                                 @endif
                             @endforeach
                         </x-spider::labeled-select>
                     @else
-                        <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')"/>
+                        <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')" :extra-attributes="$field->getAttributes('create')"/>
                     @endif
                 @endforeach
             </div>
@@ -31,4 +31,7 @@
             </div>
         </form>
     </div>
+    <script type="text/javascript">
+        document.querySelectorAll("[depend-on]").forEach(e=>{let t=document.getElementById(e.getAttribute("depend-on"));t.addEventListener("change",t=>{Array.from(e.children).forEach(e=>{e.dataset.parent!=t.target.value?(e.setAttribute("disabled",!0),e.style.display="none"):(e.removeAttribute("disabled"),e.style.display=null)});let l=Array.from(e.children).filter(e=>!e.hasAttribute("disabled")),a=l.filter(e=>e.hasAttribute("selected"));a.length?e.value=a[0].getAttribute("value"):l.length?e.value=l[0].getAttribute("value"):e.value=null,e.dispatchEvent(new CustomEvent("change",{bubbles:!0,composed:!0,cancelable:!0}))}),t.getAttribute("depend-on")||setTimeout(()=>{t.dispatchEvent(new CustomEvent("change",{bubbles:!0,composed:!0,cancelable:!0}))},10)});
+    </script>
 </x-dynamic-component>
