@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Painlesscode\Reporter\Facades\Reporter;
 use Painlesscode\Spider\Fields\Field;
+use Painlesscode\Spider\SingleAction;
 use Painlesscode\Spider\Views\Create;
 use Painlesscode\Spider\Views\Edit;
 use Painlesscode\Spider\Views\Index;
@@ -18,14 +19,32 @@ use Painlesscode\Spider\Views\Show;
  */
 trait HasResource
 {
-    public function index()
+    public function index(Request $request)
     {
+        if (
+            $request->filled('_action')
+            && $request->filled('token')
+            && $request->get('token') === csrf_token()
+            && $model = $this->resource->model::find($request->get('id'))
+        ) {
+            $action = last(
+                array_filter(
+                    $this->resource->getSingleActions(),
+                    fn(SingleAction $action) => $action->title === $request->get('_action')
+                )
+            );
+            if ($action) {
+                $result = $action->callUsing($model);
+                if (is_null($result)) return response()->success('Action '.$action->title.' executed successfully');
+                return  is_bool($result) ? response()->report($result, 'Action '.$action->title.' executed successfully') : $result;
+            }
+        }
+
         return (new Index($this->resource->name, $this->resource->model::query()->when(
             $this->resource->indexQueryModifier, $this->resource->indexQueryModifier
         )))
-            ->fields(array_filter($this->resource->fields, function (Field $field) {
-                return $field->isVisible('index');
-            }))
+            ->fields(array_filter($this->resource->fields, fn(Field $field) => $field->isVisible('index')))
+            ->singleActions($this->resource->getSingleActions())
             ->useLayout($this->resource->layout)
             ->routeName($this->resource->routeName)
             ->render();
@@ -35,9 +54,7 @@ trait HasResource
     public function create()
     {
         return (new Create($this->resource->name))
-            ->fields(array_filter($this->resource->fields, function (Field $field) {
-                return $field->isVisible('create');
-            }))
+            ->fields(array_filter($this->resource->fields, fn(Field $field) => $field->isVisible('create')))
             ->useLayout($this->resource->layout)
             ->routeName($this->resource->routeName)
             ->render();
@@ -47,9 +64,9 @@ trait HasResource
     public function store(Request $request)
     {
         $validated = $request->validate(
-            collect($this->resource->fields)->filter->isVisible('create')->mapWithKeys(function (Field $field) {
-                return [$field->column => $field->rules + $field->rulesForStore];
-            })->all()
+            collect($this->resource->fields)->filter->isVisible('create')->mapWithKeys(
+                fn(Field $field) => [$field->column => $field->rules + $field->rulesForStore]
+            )->all()
         );
 
         try {
@@ -108,6 +125,13 @@ trait HasResource
 
     public function update(Request $request, $modelKey)
     {
+        if (
+            $request->filled('__action')
+            && $action = last(array_filter($this->resource->getSingleActions(), fn($action) => $action['title'] === $request->get('__action')))
+        ) {
+            dd($action);
+        }
+
         $model = $this->resource->model::findOrFail($modelKey);
 
         $validated = $request->validate(
@@ -126,7 +150,7 @@ trait HasResource
             $updated = $model->update($validated);
 
             if($updated && $this->resource->afterUpdateCallback) {
-                $this->resource->afterUpdateCallback($model);
+                ($this->resource->afterUpdateCallback)($model);
             }
 
             $success = $updated;
@@ -151,7 +175,7 @@ trait HasResource
             DB::beginTransaction();
             $deleted = $model->delete();
             if ($deleted && $this->resource->afterDestroyCallback) {
-                $this->resource->afterDestroyCallback();
+                ($this->resource->afterDestroyCallback)();
             }
             DB::commit();
         } catch (QueryException $ex) {

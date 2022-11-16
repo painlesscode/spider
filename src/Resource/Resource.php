@@ -2,7 +2,9 @@
 
 namespace Painlesscode\Spider\Resource;
 
+use Illuminate\Support\Facades\Gate;
 use Painlesscode\Spider\Fields\Field;
+use Painlesscode\Spider\SingleAction;
 
 class Resource
 {
@@ -60,6 +62,11 @@ class Resource
      * @var callable
      */
     public $indexQueryModifier;
+
+    /**
+     * @var array<SingleAction>
+     */
+    protected $singleActions = [];
 
     public function __construct($name, $model, $routeName = null)
     {
@@ -123,5 +130,21 @@ class Resource
     {
         $this->indexQueryModifier = $callback;
         return $this;
+    }
+
+    public function singleAction(SingleAction $action)
+    {
+        $this->singleActions[] = $action;
+        return $this;
+    }
+
+    public function getSingleActions()
+    {
+        return array_filter(
+            $this->singleActions,
+            function (SingleAction $action) {
+                return !$action->permission || Gate::check($action->permission);
+            }
+        );
     }
 }

@@ -36,6 +36,11 @@ class Index
      */
     public $layout = 'app-layout';
 
+    /**
+     * @var array
+     */
+    protected $singleActions = [];
+
     public function __construct($name, $query)
     {
         $this->query = $query;
@@ -64,6 +69,12 @@ class Index
         return $this;
     }
 
+    public function singleActions($actions)
+    {
+        $this->singleActions = $actions;
+        return $this;
+    }
+
     public function render()
     {
         return view('spider::index', $this->viewData + [
@@ -71,6 +82,7 @@ class Index
             'routeName' => $this->routeName,
             'layout' => $this->layout,
             'fields' => $this->fields,
+            'singleActions' => $this->singleActions,
             'items' => $this->query->paginate(min(request()->get('per_page', 10), 1000))
         ]);
     }

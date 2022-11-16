@@ -42,6 +42,12 @@
                         @endforeach
                         <td class="p-2">
                             <div class="flex justify-end text-gray-500">
+                                <div class="inline-flex font-medium text-sm">
+                                    @foreach($singleActions as $action)
+                                        @continue(!$action->isVisible($item))
+                                        <div onclick="runAction('{{ $action->title }}', '{{ $item->id }}', true)" class="cursor-pointer text-blue-600 dark:text-blue-500 hover:underline ">{{ $action->title }}</div>
+                                    @endforeach
+                                </div>
                                 @if($hasShowRoute)
                                     <a href="{{ route($routeName.'.show', $item->getKey()) }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -87,4 +93,15 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        function runAction(action, id, shouldConfirm = false) {
+            if (shouldConfirm) {
+                if (confirm('Are you sure about this action?')) {
+                    location.href = '{{ route($routeName.'.index') }}?id='+id+'&_action='+action+'&token={{ csrf_token() }}'
+                }
+            } else {
+                location.href = '{{ route($routeName.'.index') }}?id='+id+'&_action='+action+'&token={{ csrf_token() }}'
+            }
+        }
+    </script>
 </x-dynamic-component>
