@@ -95,11 +95,7 @@
     </div>
     <script type="text/javascript">
         function runAction(action, id, shouldConfirm = false) {
-            if (shouldConfirm) {
-                if (confirm('Are you sure about this action?')) {
-                    location.href = '{{ route($routeName.'.index') }}?id='+id+'&_action='+action+'&token={{ csrf_token() }}'
-                }
-            } else {
+            if (!shouldConfirm || confirm('Are you sure about this action?')) {
                 location.href = '{{ route($routeName.'.index') }}?id='+id+'&_action='+action+'&token={{ csrf_token() }}'
             }
         }
