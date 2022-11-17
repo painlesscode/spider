@@ -79,7 +79,7 @@ trait HasResource
             $model = $this->resource->model::create($validated);
 
             if($this->resource->afterStoreCallback) {
-                $this->resource->afterStoreCallback($model);
+                call_user_func($this->resource->afterStoreCallback, $model);
             }
 
             $success = (bool) $model;
@@ -150,7 +150,7 @@ trait HasResource
             $updated = $model->update($validated);
 
             if($updated && $this->resource->afterUpdateCallback) {
-                ($this->resource->afterUpdateCallback)($model);
+                call_user_func($this->resource->afterUpdateCallback, $model);
             }
 
             $success = $updated;
