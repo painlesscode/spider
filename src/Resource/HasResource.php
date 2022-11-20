@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Painlesscode\Reporter\Facades\Reporter;
 use Painlesscode\Spider\Fields\Field;
 use Painlesscode\Spider\SingleAction;
@@ -87,6 +88,7 @@ trait HasResource
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            if ($exception instanceof ValidationException) throw $exception;
             report($exception);
             $success = false;
         }
@@ -158,6 +160,7 @@ trait HasResource
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            if ($exception instanceof ValidationException) throw $exception;
             report($exception);
             $success = false;
         }
