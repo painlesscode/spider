@@ -94,8 +94,10 @@
         </div>
     </div>
     <script type="text/javascript">
+        let actionRunning = false;
         function runAction(action, id, shouldConfirm = false) {
-            if (!shouldConfirm || confirm('Are you sure about this action?')) {
+            if (!actionRunning && (!shouldConfirm || confirm('Are you sure about this action?'))) {
+                actionRunning = true
                 location.href = '{{ Route::has($routeName.'.index') ? route($routeName.'.index') : '' }}?id='+id+'&_action='+action+'&token={{ csrf_token() }}'
             }
         }
