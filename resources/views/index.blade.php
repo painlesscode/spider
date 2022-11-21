@@ -45,7 +45,7 @@
                                 <div class="inline-flex font-medium text-sm">
                                     @foreach($singleActions as $action)
                                         @continue(!$action->isVisible($item))
-                                        <div onclick="runAction('{{ $action->title }}', '{{ $item->id }}', true)" class="cursor-pointer text-blue-600 dark:text-blue-500 hover:underline ">{{ $action->title }}</div>
+                                        <div onclick="runAction('{{ $action->title }}', '{{ $item->id }}', true)" class="cursor-pointer text-blue-600 dark:text-blue-500 hover:underline mx-1 text-sm">{{ $action->title }}</div>
                                     @endforeach
                                 </div>
                                 @if($hasShowRoute)
