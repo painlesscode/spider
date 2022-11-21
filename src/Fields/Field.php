@@ -6,7 +6,7 @@ namespace Painlesscode\Spider\Fields;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class Field
+abstract class Field
 {
     /**
      * @var string
