@@ -2,9 +2,12 @@
 
 namespace Painlesscode\Spider\Fields;
 
-
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+
+/**
+ * @method Field readonly()
+ */
 
 abstract class Field
 {
@@ -179,6 +182,12 @@ abstract class Field
     public function showValueResolver(\Closure $callable)
     {
         $this->showValueResolver = $callable;
+        return $this;
+    }
+
+    public function __call($name, $arguments)
+    {
+        $this->attributes[$name] = $arguments[0] ?? true;
         return $this;
     }
 }
