@@ -2,7 +2,7 @@
 
 <div class="{{ $attributes['class'] }}">
     <label class="block font-medium text-sm text-gray-700 font-semibold py-2" for="{{ $name }}">{{ __($label ?? Str::of($name)->replace(['_','-'], ' ')->title().'') }}@if($required)<span class="ml-2 text-red-500">*</span>@endif</label>
-    <input type="{{ $type }}" id="{{ $name }}" name="{{ $name }}" value="{{ $type === 'password' ? '' : old($name, $value) }}" {{ $disabled ? 'disabled' : '' }} {{ $required ? 'required' : '' }} {{ $attributes->filter(function ($value, $key) { return $key !== 'class'; })->merge($extraAttributes) }} class="rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full p-2 border-2 border-gray-400"/>
+    <input type="{{ $type }}" id="{{ $name }}" name="{{ $name }}" value="{{ $type === 'password' ? '' : old($name, $value) }}" {{ $disabled ? 'disabled' : '' }} {{ $required ? 'required' : '' }} {{ $attributes->filter(function ($value, $key) { return $key !== 'class'; })->merge($extraAttributes) }} class="rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full p-2 border-2 border-gray-400 read-only:bg-slate-100"/>
     @error($name)
     <span class="text-red-500 text-sm">{{ $message }}</span>
     @enderror
