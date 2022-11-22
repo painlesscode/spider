@@ -146,7 +146,7 @@ trait HasResource
             DB::beginTransaction();
 
             $validated = $this->resource->afterUpdateValidationCallback
-                ? call_user_func($this->resource->afterUpdateValidationCallback, $validated)
+                ? call_user_func($this->resource->afterUpdateValidationCallback, $validated, $model)
                 : $validated;
 
             $updated = $model->update($validated);
