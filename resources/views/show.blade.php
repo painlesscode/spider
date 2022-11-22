@@ -9,10 +9,15 @@
     <div class="w-full p-4">
         <div class="w-full flex flex-wrap justify-center">
             @foreach($fields as $field)
-                <div class="w-full flex border border-slate-400">
-                    <div class="p-2 w-1/3 bg-slate-300">{{ $field->name }}</div>
-                    <div class="p-2 w-2/3">{!! $field->showValueResolver ? ($field->showValueResolver)($model) : $model->{$field->column} !!}</div>
-                </div>
+                @if($field instanceof \Painlesscode\Spider\Fields\Widgets\ShowAbleWidget || $field instanceof \Painlesscode\Spider\Fields\Widgets\ReadAbleWidget)
+                    <x-dynamic-component :component="$field->getComponentForShow()" :field="$field" :model="$model"/>
+                @else
+                    <div class="w-full flex border border-slate-400">
+                        <div class="p-2 w-1/3 bg-slate-300">{{ $field->name }}</div>
+                        <div
+                            class="p-2 w-2/3">{!! $field->showValueResolver ? ($field->showValueResolver)($model) : $model->{$field->column} !!}</div>
+                    </div>
+                @endif
             @endforeach
         </div>
     </div>

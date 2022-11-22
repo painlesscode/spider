@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
  * @method Field readonly()
  */
 
-abstract class Field
+abstract class Field implements \ArrayAccess
 {
     /**
      * @var string
@@ -51,7 +51,7 @@ abstract class Field
 
     public $showValueResolver;
 
-    public $visibleOn = [
+    protected $visibleOn = [
         'index', 'create', 'show', 'edit'
     ];
 
@@ -205,5 +205,24 @@ abstract class Field
             return $default($this, $value) ?: $this;
         }
         return $this;
+    }
+
+    public function offsetExists($offset) {
+        return isset($this->attributes[$offset]);
+    }
+
+    public function offsetGet($offset) {
+        return $this->attributes[$offset];
+    }
+
+    public function offsetSet($offset,$value): void
+    {
+        $this->attributes[$offset] = $value;
+    }
+
+
+    public function offsetUnset($offset): void
+    {
+        unset($this->attributes[$offset]);
     }
 }
