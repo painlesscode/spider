@@ -220,7 +220,6 @@ abstract class Field implements \ArrayAccess
         $this->attributes[$offset] = $value;
     }
 
-
     public function offsetUnset($offset): void
     {
         unset($this->attributes[$offset]);
