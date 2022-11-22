@@ -15,14 +15,14 @@
                         <x-spider::labeled-select class="p-1 w-full lg:w-1/2 xl:w-1/3 flex-grow" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')" :extra-attributes="$field->getAttributes('create')">
                             @foreach($field->getOptions() as $key => $option)
                                 @if($option instanceof \Painlesscode\Spider\Fields\Utils\Option)
-                                    <option value="{{ $option->value }}" @if($option->parent) data-parent="{{ $option->parent }}" @endif>{{ $option->label }}</option>
+                                    <option value="{{ $option->value }}" @if($option->parent) data-parent="{{ $option->parent }}" @endif @if($field->value == $option->value) selected @endif>{{ $option->label }}</option>
                                 @else
-                                <option value="{{ $key }}">{{ $option }}</option>
+                                <option value="{{ $key }}" @if($field->value == $option->value) selected @endif>{{ $option }}</option>
                                 @endif
                             @endforeach
                         </x-spider::labeled-select>
                     @else
-                        <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3 flex-grow" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')" :extra-attributes="$field->getAttributes('create')"/>
+                        <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3 flex-grow" :value="$field->value" :name="$field->column" :label="$field->name" :required="$field->isRequired('create')" :extra-attributes="$field->getAttributes('create')"/>
                     @endif
                 @endforeach
             </div>

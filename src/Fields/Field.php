@@ -66,6 +66,12 @@ abstract class Field
         return new static(...func_get_args());
     }
 
+    public function value($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
+
     public function required($required = true)
     {
         $this->attributes['required'] = $required;

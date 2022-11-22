@@ -16,14 +16,14 @@
                         <x-spider::labeled-select class="p-1 w-full lg:w-1/2 xl:w-1/3 flex-grow" :name="$field->column" :label="$field->name" :required="$field->isRequired('edit')" :extra-attributes="$field->getAttributes('edit')">
                             @foreach($field->getOptions() as $key => $option)
                                 @if($option instanceof \Painlesscode\Spider\Fields\Utils\Option)
-                                    <option @if($model->{$field->column} == $option->value) selected @endif @if($option->parent) data-parent="{{ $option->parent }}" @endif value="{{ $option->value }}">{{ $option->label }}</option>
+                                    <option @if(($field->value ?? $model->{$field->column}) == $option->value) selected @endif @if($option->parent) data-parent="{{ $option->parent }}" @endif value="{{ $option->value }}">{{ $option->label }}</option>
                                 @else
-                                    <option @if($model->{$field->column} == (string) $key) selected @endif value="{{ $key }}">{{ $option }}</option>
+                                    <option @if(($field->value ?? $model->{$field->column}) == (string) $key) selected @endif value="{{ $key }}">{{ $option }}</option>
                                 @endif
                             @endforeach
                         </x-spider::labeled-select>
                     @else
-                    <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3 flex-grow" :name="$field->column" :value="$model->{$field->column}" :label="$field->name" :required="$field->isRequired('edit')" :extra-attributes="$field->getAttributes('edit')"/>
+                    <x-spider::labeled-input :type="$field->type" class="p-1 w-full lg:w-1/2 xl:w-1/3 flex-grow" :name="$field->column" :value="$field->value ?? $model->{$field->column}" :label="$field->name" :required="$field->isRequired('edit')" :extra-attributes="$field->getAttributes('edit')"/>
                     @endif
                 @endforeach
             </div>
