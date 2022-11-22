@@ -17,7 +17,7 @@
                                 @if($option instanceof \Painlesscode\Spider\Fields\Utils\Option)
                                     <option value="{{ $option->value }}" @if($option->parent) data-parent="{{ $option->parent }}" @endif @if($field->value == $option->value) selected @endif>{{ $option->label }}</option>
                                 @else
-                                <option value="{{ $key }}" @if($field->value == $option->value) selected @endif>{{ $option }}</option>
+                                <option value="{{ $key }}" @if($field->value == (string) $key) selected @endif>{{ $option }}</option>
                                 @endif
                             @endforeach
                         </x-spider::labeled-select>
