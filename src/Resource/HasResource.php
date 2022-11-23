@@ -129,13 +129,6 @@ trait HasResource
 
     public function update(Request $request, $modelKey)
     {
-        if (
-            $request->filled('__action')
-            && $action = last(array_filter($this->resource->getSingleActions(), fn($action) => $action['title'] === $request->get('__action')))
-        ) {
-            dd($action);
-        }
-
         $model = $this->resource->model::findOrFail($modelKey);
 
         $validated = $request->validate(
