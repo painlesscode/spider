@@ -35,7 +35,9 @@ trait HasResource
                 )
             );
             if ($action) {
-                $result = $action->callUsing($model);
+                $result = DB::transaction(function () use ($action, $model) {
+                    return $action->callUsing($model);
+                });
                 if (is_null($result)) return response()->success('Action '.$action->title.' executed successfully');
                 return  is_bool($result) ? response()->report($result, 'Action '.$action->title.' executed successfully') : $result;
             }
