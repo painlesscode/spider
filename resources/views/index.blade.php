@@ -41,7 +41,7 @@
                             @if($field instanceof \Painlesscode\Spider\Fields\Widgets\IndexAbleWidget || $field instanceof \Painlesscode\Spider\Fields\Widgets\ReadAbleWidget)
                                 <x-dynamic-component :component="$field->getComponentForIndex()" :field="$field" :model="$model"/>
                             @else
-                                <td class="p-2">{!! $field->indexValueResolver ? ($field->indexValueResolver)($item) : $item->{$field->column} !!}</td>
+                                <td class="p-2">{!! $field->indexValueResolver ? call_user_func($field->indexValueResolver, $item, $items) : $item->{$field->column} !!}</td>
                             @endif
                         @endforeach
                         <td class="p-2">
