@@ -108,6 +108,13 @@ class Resource
         return $this;
     }
 
+    /**
+     * Receives newly created model
+     * If any exception is thrown, transaction will be rolled back
+     *
+     * @param callable $callback
+     * @return $this
+     */
     public function afterStore(callable $callback)
     {
         $this->afterStoreCallback = $callback;
