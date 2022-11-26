@@ -12,7 +12,9 @@
             @method('PUT')
             <div class="w-full flex flex-wrap justify-center">
                 @foreach($fields as $field)
-                    @if($field instanceof \Painlesscode\Spider\Fields\Select)
+                    @if($field instanceof \Painlesscode\Spider\Fields\Widgets\InputWidget)
+                        <x-dynamic-component :component="$field->getComponentForEdit()" :field="$field" :model="$model"/>
+                    @elseif($field instanceof \Painlesscode\Spider\Fields\Select)
                         <x-spider::labeled-select class="p-1 w-full lg:w-1/2 xl:w-1/3 flex-grow" :name="$field->column" :label="$field->name" :required="$field->isRequired('edit')" :extra-attributes="$field->getAttributes('edit')">
                             @foreach($field->getOptions() as $key => $option)
                                 @if($option instanceof \Painlesscode\Spider\Fields\Utils\Option)
