@@ -38,8 +38,8 @@ class Quill extends InputWidget
         return 'spider::quill';
     }
 
-    public function getComponentForUpdate()
+    public function getComponentForEdit()
     {
-        // TODO: Implement getComponentForUpdate() method.
+        return 'spider::quill';
     }
 }

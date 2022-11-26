@@ -8,7 +8,7 @@ use Painlesscode\Spider\Fields\Field;
 
 abstract class InputWidget extends Field
 {
-    public $visibleOn = [
+    protected $visibleOn = [
         'create','edit'
     ];
 
@@ -25,5 +25,5 @@ abstract class InputWidget extends Field
     /**
      * @return string
      */
-    public abstract function getComponentForUpdate();
+    public abstract function getComponentForEdit();
 }

@@ -2,9 +2,9 @@
 <div class="w-full py-2 font-semibold text-gray-700">{{ $field->lebel ?? $field->name }}</div>
 <div class="w-full pb-12">
     <div class="w-full bg-white">
-        <div id="{{ $field->name }}-editor" class="bg-white">{!! optional($model)->{$field->name} !!}</div>
+        <div id="{{ $field->name }}-editor" class="bg-white">{!! optional($model)->{$field->column} !!}</div>
     </div>
-    <input type="hidden" name="{{ $field->name }}" id="{{ $field->name }}"/>
+    <input type="hidden" name="{{ $field->column }}" id="{{ $field->name }}"/>
 </div>
 <script>
     (function (){
