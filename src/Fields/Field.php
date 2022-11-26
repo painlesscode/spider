@@ -59,11 +59,17 @@ abstract class Field implements \ArrayAccess
     {
         $this->name = $name;
         $this->column = $column ?? Str::snake($name);
+        $this->boot();
     }
 
     public static function make()
     {
         return new static(...func_get_args());
+    }
+
+    public function boot()
+    {
+
     }
 
     public function value($value)
