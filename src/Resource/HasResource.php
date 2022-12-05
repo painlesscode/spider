@@ -35,11 +35,17 @@ trait HasResource
                 )
             );
             if ($action) {
-                $result = DB::transaction(function () use ($action, $model) {
-                    return $action->callUsing($model);
-                });
-                if (is_null($result)) return response()->success('Action '.$action->title.' executed successfully');
-                return  is_bool($result) ? response()->report($result, 'Action '.$action->title.' executed successfully') : $result;
+                try {
+                    DB::beginTransaction();
+                    $result = $action->callUsing($model);
+                    DB::commit();
+                    if (is_null($result)) return response()->success('Action ' . $action->title . ' executed successfully');
+                    return is_bool($result) ? response()->report($result, 'Action ' . $action->title . ' executed successfully') : $result;
+                } catch (\Exception $ex) {
+                    DB::rollBack();
+                    report($ex);
+                    return response()->error();
+                }
             }
         }
 
@@ -81,11 +87,11 @@ trait HasResource
 
             $model = $this->resource->model::create($validated);
 
-            if($this->resource->afterStoreCallback) {
+            if ($this->resource->afterStoreCallback) {
                 call_user_func($this->resource->afterStoreCallback, $model);
             }
 
-            $success = (bool) $model;
+            $success = (bool)$model;
 
             DB::commit();
         } catch (\Exception $exception) {
@@ -95,7 +101,7 @@ trait HasResource
             $success = false;
         }
 
-        return response()->report($success, Str::title($this->resource->name).' Created Successfully');
+        return response()->report($success, Str::title($this->resource->name) . ' Created Successfully');
     }
 
 
@@ -146,7 +152,7 @@ trait HasResource
 
             $updated = $model->update($validated);
 
-            if($updated && $this->resource->afterUpdateCallback) {
+            if ($updated && $this->resource->afterUpdateCallback) {
                 call_user_func($this->resource->afterUpdateCallback, $model);
             }
 
@@ -160,7 +166,7 @@ trait HasResource
             $success = false;
         }
 
-        return response()->report($success, Str::title($this->resource->name).' Updated Successfully');
+        return response()->report($success, Str::title($this->resource->name) . ' Updated Successfully');
     }
 
 
@@ -183,6 +189,6 @@ trait HasResource
             }
         }
 
-        return response()->report($deleted, Str::title($this->resource->name).' Deleted Successfully');
+        return response()->report($deleted, Str::title($this->resource->name) . ' Deleted Successfully');
     }
 }
