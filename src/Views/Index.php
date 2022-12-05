@@ -16,30 +16,17 @@ class Index
      */
     public $name;
 
-    /**
-     * @var string
-     */
-    public $routeName;
+    public string $routeName;
 
-    /**
-     * @var array
-     */
-    public $viewData = [];
+    public array $viewData = [];
 
-    /**
-     * @var array<Field>
-     */
-    public $fields = [];
+    public array $fields = [];
 
-    /**
-     * @var string
-     */
-    public $layout = 'app-layout';
+    public string $layout = 'app-layout';
 
-    /**
-     * @var array
-     */
-    protected $singleActions = [];
+    protected array $singleActions = [];
+
+    protected bool $lengthAwarePaginator = false;
 
     public function __construct($name, $query)
     {
@@ -52,26 +39,33 @@ class Index
      * @param string $routeName
      * @return $this
      */
-    public function routeName($routeName) {
+    public function routeName($routeName): Index
+    {
         $this->routeName = $routeName;
         return $this;
     }
 
-    public function fields($fields)
+    public function fields($fields): Index
     {
         $this->fields = $fields;
         return $this;
     }
 
-    public function useLayout($layout)
+    public function useLayout($layout): Index
     {
         $this->layout = $layout;
         return $this;
     }
 
-    public function singleActions($actions)
+    public function singleActions($actions): Index
     {
         $this->singleActions = $actions;
+        return $this;
+    }
+
+    public function useLengthAwarePaginator(): Index
+    {
+        $this->lengthAwarePaginator = true;
         return $this;
     }
 
@@ -83,7 +77,9 @@ class Index
             'layout' => $this->layout,
             'fields' => $this->fields,
             'singleActions' => $this->singleActions,
-            'items' => $this->query->paginate(min(request()->get('per_page', 10), 1000))
+            'items' => $this->lengthAwarePaginator
+                ? $this->query->paginate(min(request()->get('per_page', 10), 1000))
+                : $this->query->simplePaginate(min(request()->get('per_page', 10), 1000))
         ]);
     }
 }
