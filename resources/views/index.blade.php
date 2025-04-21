@@ -19,7 +19,7 @@
                         <option value="100" @if(request('per_page') == 100) selected @endif>{{ __('100') }}</option>
                     </select>
                 </form>
-                @if($search)
+                @if($search && Route::has($routeName.'.index'))
                     <form action="{{ route($routeName.'.index') }}" class="flex">
                         <input type="text" name="search" placeholder="{{ __('Search') }}"
                                class="border rounded-l p-1 pr-8" value="{{ request('search') }}"/>
