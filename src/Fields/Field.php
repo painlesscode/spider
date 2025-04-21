@@ -3,6 +3,7 @@
 namespace Painlesscode\Spider\Fields;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Validation\Rule;
 
 /**
@@ -11,6 +12,7 @@ use Illuminate\Validation\Rule;
 
 abstract class Field implements \ArrayAccess
 {
+    use Macroable;
     /**
      * @var string
      */
