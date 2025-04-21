@@ -28,6 +28,8 @@ class Index
 
     protected bool $lengthAwarePaginator = false;
 
+    protected ?string $search = null;
+
     public function __construct($name, $query)
     {
         $this->query = $query;
@@ -63,9 +65,15 @@ class Index
         return $this;
     }
 
-    public function useLengthAwarePaginator(): Index
+    public function useLengthAwarePaginator($shouldUse = true): Index
     {
-        $this->lengthAwarePaginator = true;
+        $this->lengthAwarePaginator = $shouldUse;
+        return $this;
+    }
+
+    public function search(string $search): Index
+    {
+        $this->search = $search;
         return $this;
     }
 
@@ -76,6 +84,7 @@ class Index
             'routeName' => $this->routeName,
             'layout' => $this->layout,
             'fields' => $this->fields,
+            'search' => $this->search,
             'singleActions' => $this->singleActions,
             'items' => $this->lengthAwarePaginator
                 ? $this->query->paginate(min(request()->get('per_page', 10), 1000))

@@ -19,6 +19,15 @@
                         <option value="100" @if(request('per_page') == 100) selected @endif>{{ __('100') }}</option>
                     </select>
                 </form>
+                @if($search)
+                    <form action="{{ route($routeName.'.index') }}" class="flex">
+                        <input type="text" name="search" placeholder="{{ __('Search') }}"
+                               class="border rounded-l p-1 pr-8" value="{{ request('search') }}"/>
+                        <button type="submit" class="bg-gray-700 text-white rounded-r p-1 px-2">
+                            Search
+                        </button>
+                    </form>
+                @endif
             </div>
             <div class="w-full overflow-x-auto">
                 <table class="table w-full">
@@ -95,7 +104,7 @@
                 </table>
             </div>
             <div class="w-full">
-                {{ $items->appends(request()->only(['page','per_page']))->links('spider::pagination') }}
+                {{ $items->appends(request()->only(['page','per_page', $search]))->links('spider::pagination') }}
             </div>
         </div>
     </div>

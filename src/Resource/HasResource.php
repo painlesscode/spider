@@ -49,12 +49,22 @@ trait HasResource
             }
         }
 
-        return (new Index($this->resource->name, $this->resource->model::query()->when(
+
+        $index = new Index($this->resource->name, $this->resource->model::query()->when(
             $this->resource->indexQueryModifier, $this->resource->indexQueryModifier
-        )))
+        )->when($this->resource->search, function ($query) use ($request) {
+            call_user_func($this->resource->search, $query, $request);
+        }));
+
+        if ($this->resource->indexModifier) {
+            call_user_func($this->resource->indexModifier, $index);
+        }
+
+        return $index
             ->fields(array_filter($this->resource->fields, fn(Field $field) => $field->isVisible('index')))
             ->singleActions($this->resource->getSingleActions())
             ->useLayout($this->resource->layout)
+            ->search('search')
             ->routeName($this->resource->routeName)
             ->render();
     }

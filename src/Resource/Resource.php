@@ -64,9 +64,19 @@ class Resource
     public $indexQueryModifier;
 
     /**
+     * @var callable|null
+     */
+    public $search = null;
+
+    /**
      * @var array<SingleAction>
      */
     protected $singleActions = [];
+
+    /**
+     * @var callable|null
+     */
+    public $indexModifier = null;
 
     public function __construct($name, $model, $routeName = null)
     {
@@ -153,5 +163,21 @@ class Resource
                 return !$action->permission || Gate::check($action->permission);
             }
         );
+    }
+
+    /**
+     * @param callable $callback(Index $index)
+     * @return $this
+     */
+    public function modifyIndexUsing($callback): Resource
+    {
+        $this->indexModifier = $callback;
+        return $this;
+    }
+
+    public function search($using): Resource
+    {
+        $this->search = $using;
+        return $this;
     }
 }
