@@ -64,7 +64,7 @@ trait HasResource
             ->fields(array_filter($this->resource->fields, fn(Field $field) => $field->isVisible('index')))
             ->singleActions($this->resource->getSingleActions())
             ->useLayout($this->resource->layout)
-            ->search('search')
+            ->search($this->resource->search)
             ->routeName($this->resource->routeName)
             ->render();
     }

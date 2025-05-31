@@ -71,7 +71,7 @@ class Index
         return $this;
     }
 
-    public function search(string $search): Index
+    public function search(?string $search): Index
     {
         $this->search = $search;
         return $this;
