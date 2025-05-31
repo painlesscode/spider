@@ -24,6 +24,9 @@
             "providers": [
                 "Painlesscode\\Spider\\SpiderServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-1.x": "1.x-dev"
         }
     },
     "repositories": {
