@@ -28,7 +28,7 @@ class Index
 
     protected bool $lengthAwarePaginator = false;
 
-    protected ?string $search = null;
+    protected $search = null;
 
     public function __construct($name, $query)
     {
@@ -71,7 +71,7 @@ class Index
         return $this;
     }
 
-    public function search(?string $search): Index
+    public function search($search): Index
     {
         $this->search = $search;
         return $this;
