@@ -104,7 +104,7 @@
                 </table>
             </div>
             <div class="w-full">
-                {{ $items->appends(request()->only(['page','per_page', $search]))->links('spider::pagination') }}
+                {{ $items->appends(request()->only(['page','per_page', 'search']))->links('spider::pagination') }}
             </div>
         </div>
     </div>

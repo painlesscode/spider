@@ -52,7 +52,7 @@ trait HasResource
 
         $index = new Index($this->resource->name, $this->resource->model::query()->when(
             $this->resource->indexQueryModifier, $this->resource->indexQueryModifier
-        )->when($this->resource->search, function ($query) use ($request) {
+        )->when('search', function ($query) use ($request) {
             call_user_func($this->resource->search, $query, $request);
         }));
 
