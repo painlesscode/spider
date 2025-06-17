@@ -10,6 +10,10 @@
         <div class="w-full flex flex-col">
             <div class="w-full rounded-t bg-gray-50 flex justify-between items-center p-2" x-data>
                 <form action="">
+                    @foreach($appends as $append)
+                        @continue(!request($append))
+                        <input type="hidden" name="{{ $append }}" value="{{ request($append) }}">
+                    @endforeach
                     <select class="border rounded p-1 pr-8" name="per_page"
                             x-on:change="$event.target.parentElement.submit()">
                         <option value="10" @if(request('per_page') == 10) selected @endif>{{ __('10') }}</option>
@@ -17,6 +21,9 @@
                         <option value="30" @if(request('per_page') == 30) selected @endif>{{ __('30') }}</option>
                         <option value="50" @if(request('per_page') == 50) selected @endif>{{ __('50') }}</option>
                         <option value="100" @if(request('per_page') == 100) selected @endif>{{ __('100') }}</option>
+                        <option value="200" @if(request('per_page') == 200) selected @endif>{{ __('200') }}</option>
+                        <option value="500" @if(request('per_page') == 500) selected @endif>{{ __('500') }}</option>
+                        <option value="1000" @if(request('per_page') == 1000) selected @endif>{{ __('1000') }}</option>
                     </select>
                 </form>
                 @if($search && Route::has($routeName.'.index'))
@@ -104,7 +111,7 @@
                 </table>
             </div>
             <div class="w-full">
-                {{ $items->appends(request()->only(['page','per_page', 'search']))->links('spider::pagination') }}
+                {{ $items->appends(request()->only($appends))->links('spider::pagination') }}
             </div>
         </div>
     </div>

@@ -30,6 +30,8 @@ class Index
 
     protected $search = null;
 
+    protected $appends = ['per_page', 'search'];
+
     public function __construct($name, $query)
     {
         $this->query = $query;
@@ -77,6 +79,12 @@ class Index
         return $this;
     }
 
+    public function appends($array): Index
+    {
+        $this->appends = $array;
+        return $this;
+    }
+
     public function render()
     {
         return view('spider::index', $this->viewData + [
@@ -86,6 +94,7 @@ class Index
             'fields' => $this->fields,
             'search' => $this->search,
             'singleActions' => $this->singleActions,
+            'appends' => $this->appends,
             'items' => $this->lengthAwarePaginator
                 ? $this->query->paginate(min(request()->get('per_page', 10), 1000))
                 : $this->query->simplePaginate(min(request()->get('per_page', 10), 1000))
