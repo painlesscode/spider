@@ -81,7 +81,7 @@ class Index
 
     public function appends($array): Index
     {
-        $this->appends = $array;
+        $this->appends = array_merge(['per_page','search'], $array);
         return $this;
     }
 

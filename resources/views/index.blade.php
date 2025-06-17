@@ -11,7 +11,7 @@
             <div class="w-full rounded-t bg-gray-50 flex justify-between items-center p-2" x-data>
                 <form action="">
                     @foreach($appends as $append)
-                        @continue(!request($append))
+                        @continue(!request($append) || $append == 'per_page')
                         <input type="hidden" name="{{ $append }}" value="{{ request($append) }}">
                     @endforeach
                     <select class="border rounded p-1 pr-8" name="per_page"
